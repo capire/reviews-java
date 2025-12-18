@@ -1,0 +1,20 @@
+subject;reviewer;rating;title;text;date
+201;alice;5;Intriguing;A haunting tale of passion and revenge set on the Yorkshire moors.;2023-01-01 11:03:00
+201;bob;4;Fascinating;A classic story of love and turmoil.;2023-01-02 11:03:00
+207;bob;2;What is this?;Disappointing and poorly written. The plot was confusing and the characters lacked depth.;2023-01-03 11:03:00
+251;bob;3;It's dark...;A dark and twisted tale that left me feeling uneasy.;2023-01-04 11:03:00
+251;alice;4;Dark and twisted;A gripping story that kept me on the edge of my seat.;2023-01-05 11:03:00
+201;carol;5;A masterpiece;An incredible work of art that delves deep into the human psyche.;2023-01-06 11:03:00
+202;alice;4;A classic;A timeless story that resonates with readers of all ages.;2023-01-07 11:03:00
+202;bob;3;Good, but not great;A solid read, but it didn't quite live up to the hype.;2023-01-08 11:03:00
+203;carol;5;A must-read;An essential book for anyone who loves literature.;2023-01-09 11:03:00
+204;alice;4;Thought-provoking;A book that challenges your thinking and leaves you questioning everything.;2023-01-10 11:03:00
+205;bob;2;Not my cup of tea;A tedious read that failed to engage me.;2023-01-11 11:03:00
+206;carol;3;Interesting concept;The idea was intriguing, but the execution fell flat.;2023-01-12 11:03:00
+207;alice;5;A thrilling ride;An exhilarating journey that kept me hooked from start to finish.;2023-01-13 11:03:00
+208;bob;4;A delightful read;A charming story that warmed my heart.;2023-01-14 11:03:00
+209;carol;3;Average;An okay book, but nothing special.;2023-01-15 11:03:00
+210;alice;5;Exceptional;A brilliant piece of literature that deserves all the accolades it receives.;2023-01-16 11:03:00
+211;bob;4;Engaging;A captivating story that kept me turning the pages.;2023-01-17 11:03:00
+212;carol;2;Disappointing;I expected more from this book. The plot was weak and the characters were one-dimensional.;2023-01-18 11:03:00
+213;alice;3;Mediocre;An average read that didn't leave a lasting impression.;2023-01-19 11:03:00

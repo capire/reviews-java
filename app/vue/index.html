@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title> Capire Reviews </title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/primitive-ui/dist/css/main.css">
+  <script type="importmap">
+    { "imports": {
+      "vue": "https://cdn.jsdelivr.net/npm/vue@3/dist/vue.esm-browser.prod.js",
+      "axios": "https://cdn.jsdelivr.net/npm/axios/dist/esm/axios.min.js"
+    } }
+  </script>
+  <script type="module" src="app.js"></script>
+  <style>
+    table#reviews { overflow-y: scroll; max-height: 422px; display: block; }
+    table#reviews tr:hover td { color:cyan; background: #123; cursor: pointer; }
+    .succeeded { color:teal; margin-left: 11px; }
+    .failed { color:red; margin-left: 11px; }
+    .stars { color:gold; font-size: 1.2em; font-weight: bold; }
+    textarea { line-height: 1.4em;}
+  </style>
+</head>
+
+<body class="small-container", style="margin-top: 70px;">
+  <div id='app'>
+
+    <h1> Capire Reviews </h1>
+
+    <input id="search" type="text" placeholder="Search..."
+      @input="fetch ($event.target.value)">
+
+    <table id="reviews">
+      <thead>
+        <th> Subject </th>
+        <th> Reviewer </th>
+        <th> Rating </th>
+        <th> Title </th>
+        <th> Date </th>
+      </thead>
+      <tr v-for="each, index in reviews" @click="edit(index)">
+        <td>{{ each.subject }}</td>
+        <td>{{ each.reviewer }}</td>
+        <td class="stars">{{ Ratings [each.rating] }}</td>
+        <td>{{ each.title }}</td>
+        <td>{{ at (each.date) }}</td>
+      </tr>
+    </table>
+
+    <button @click="edit()" class="round-button muted-button">
+      New Review...
+    </button>
+
+    <form v-if="review" @submit.prevent="submit()">
+      <input type="text" v-model="review.subject" style="font-weight:bold; display:inline; width:20%;">
+      <input type="text" v-model="review.title" style="font-weight:bold; display:inline; width:60%;">
+      <select class="stars" v-model="review.rating" style="font-weight:bold; display:inline; width:20%; float: right;">
+        <option v-for="( stars, value ) in Ratings" :value="value"> {{ stars }} </option>
+      </select>
+      <textarea v-model="review.text" rows="4"></textarea>
+      <input type="submit" value="Submit" class="round-button muted-button">
+      <input type="button" value="Like" class="round-button muted-button" @click="like">
+      <input type="button" value="Unlike" class="round-button muted-button" @click="unlike">
+      <span :class="message"> {{ message.succeeded || message.failed }} </span>
+    </form>
+
+    <div v-else style="margin-top: 2em;">
+      ( click on a row to see details... )
+    </div>
+
+  </div>
+</body>
+</html>

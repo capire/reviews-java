@@ -1,0 +1,28 @@
+{
+  "name": "@capire/reviews-java",
+  "version": "2.0.1",
+  "description": "A generic reuse service for managing reviews.",
+  "repository": "https://github.com/capire/reviews-java",
+  "files": [
+    "db",
+    "srv",
+    "index.cds"
+  ],
+  "dependencies": {
+    "@cap-js/hana": ">=1",
+    "@sap/cds": ">=5",
+    "@sap/cds-dk": "^9.3.2",
+    "@sap/xssec": "^4.2.7",
+    "express": "^4.17.1"
+  },
+  "cds": {
+    "requires": {
+      "messaging": true,
+      "db": true
+    }
+  },
+  "scripts": {
+    "start": "mvn spring-boot:run",
+    "hybrid": "SPRING_PROFILES_ACTIVE=cloud,hybrid npx cds bind --exec mvn spring-boot:run"
+  }
+}
