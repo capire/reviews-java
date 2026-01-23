@@ -26,29 +26,31 @@ import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
-import com.sap.cds.services.messaging.MessagingService;
 import com.sap.cds.services.persistence.PersistenceService;
 
 import cds.gen.sap.capire.reviews.Likes;
 import cds.gen.sap.capire.reviews.api.reviewsservice.AverageRatingsChanged;
-import cds.gen.sap.capire.reviews.api.reviewsservice.AverageRatingsChanged_;
+import cds.gen.sap.capire.reviews.api.reviewsservice.AverageRatingsChangedContext;
+import cds.gen.sap.capire.reviews.app.reviewsservice.ReviewsService;
+import cds.gen.sap.capire.reviews.app.reviewsservice.ReviewsService_;
 import cds.gen.sap.capire.reviews.app.reviewsservice.LikeContext;
 import cds.gen.sap.capire.reviews.app.reviewsservice.Likes_;
 import cds.gen.sap.capire.reviews.app.reviewsservice.Reviews;
 import cds.gen.sap.capire.reviews.app.reviewsservice.Reviews_;
 import cds.gen.sap.capire.reviews.app.reviewsservice.UnlikeContext;
-import cds.gen.sap.capire.reviews.app.reviewsservice.ReviewsService;
-import cds.gen.sap.capire.reviews.app.reviewsservice.ReviewsService_;
 
 @Component
 @ServiceName(ReviewsService_.CDS_NAME)
 public class ReviewsHandler implements EventHandler {
 
   @Autowired
-  @Qualifier("samples-messaging")
-  private MessagingService messagingService;
+  @Qualifier(ReviewsService_.CDS_NAME)
+  CqnService service;
 
-  private final ReviewsService service;
+  @Autowired
+  @Qualifier(cds.gen.sap.capire.reviews.api.reviewsservice.ReviewsService_.CDS_NAME)
+  CqnService serviceApi;
+
   private final PersistenceService persistenceService;
   private final Random random;
 
@@ -135,25 +137,25 @@ public class ReviewsHandler implements EventHandler {
   }
 
   @After(event = { CqnService.EVENT_CREATE, CqnService.EVENT_UPDATE, CqnService.EVENT_DELETE } )
-  public void afterChangeReview(EventContext context, Stream<Reviews> reviews) {
-    reviews.forEach(review -> {
-      Result result = service.run(Select.from(Reviews_.CDS_NAME)
-        .columns(r -> CQL.count(r.get("subject")).as("count"), r -> CQL.average(r.get("rating")).as("avg"))
-        .where(o -> o.get("subject").eq(review.getSubject())));
-      Row selected = result.single();
-      String subject = review.getSubject();
-      Long count = (Long) selected.get("count");
-      BigDecimal avgRating = (BigDecimal) selected.get("avg");
-      sendReviewedMessage(subject, count.intValue(), avgRating.intValue());
-    });
+  public void afterChangeReview(EventContext context, Reviews review) {
+    Result result = service.run(Select.from(Reviews_.CDS_NAME)
+      .columns(r -> CQL.count(r.get("subject")).as("count"), r -> CQL.average(r.get("rating")).as("avg"))
+      .where(o -> o.get("subject").eq(review.getSubject())));
+    Row selected = result.single();
+    String subject = review.getSubject();
+    Long count = (Long) selected.get("count");
+    BigDecimal avgRating = (BigDecimal) selected.get("avg");
+    sendReviewedMessage(subject, count.intValue(), avgRating.intValue());
   }
 
   private void sendReviewedMessage(String subject, Integer count, Integer avgRating) {
-    AverageRatingsChanged message = AverageRatingsChanged.create();
-    message.setSubject(subject);
-    message.setReviews(count);
-    message.setRating(avgRating);
-    messagingService.emit(AverageRatingsChanged_.CDS_NAME, message);
+    AverageRatingsChanged event = AverageRatingsChanged.create();
+    event.setSubject(subject);
+    event.setReviews(count);
+    event.setRating(avgRating);
+    AverageRatingsChangedContext message = AverageRatingsChangedContext.create();
+    message.setData(event);
+    serviceApi.emit(message);
   }
 
 }
