@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -61,11 +60,9 @@ public class ReviewsHandler implements EventHandler {
   }
 
   @On(event = { CqnService.EVENT_CREATE, CqnService.EVENT_UPDATE } )
-  public void onUpdateReviews(EventContext context, Stream<Reviews> reviews) {
-    reviews.forEach(review -> {
-      if(review.getRating()==null)
-        review.setRating(random.nextInt(4)+1);
-    });
+  public void onUpdateReview(EventContext context, Reviews review) {
+    if(review.getRating()==null)
+      review.setRating(random.nextInt(4)+1);
   }
 
   @On(service = ReviewsService_.CDS_NAME, event = "like")
