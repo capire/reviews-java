@@ -30,7 +30,6 @@ import com.sap.cds.services.persistence.PersistenceService;
 import cds.gen.sap.capire.reviews.Likes;
 import cds.gen.sap.capire.reviews.api.reviewsservice.AverageRatingsChanged;
 import cds.gen.sap.capire.reviews.api.reviewsservice.AverageRatingsChangedContext;
-import cds.gen.sap.capire.reviews.app.reviewsservice.ReviewsService;
 import cds.gen.sap.capire.reviews.app.reviewsservice.ReviewsService_;
 import cds.gen.sap.capire.reviews.app.reviewsservice.LikeContext;
 import cds.gen.sap.capire.reviews.app.reviewsservice.Likes_;
@@ -53,8 +52,7 @@ public class ReviewsHandler implements EventHandler {
   private final PersistenceService persistenceService;
   private final Random random;
 
-  public ReviewsHandler(ReviewsService service, PersistenceService persistenceService) {
-    this.service = service;
+  public ReviewsHandler(PersistenceService persistenceService) {
     this.persistenceService = persistenceService;
     this.random = new Random(System.currentTimeMillis());
   }
