@@ -63,8 +63,8 @@ public class ReviewsHandler implements EventHandler {
       review.setRating(random.nextInt(4)+1);
   }
 
-  @On(service = ReviewsService_.CDS_NAME, event = "like")
-  public void onLikes(LikeContext context) {
+  @On(service = ReviewsService_.CDS_NAME)
+  public void onLike(LikeContext context) {
     String reviewer = context.getReview().getReviewer();
     String subject = context.getReview().getSubject();
     try {
@@ -94,8 +94,8 @@ public class ReviewsHandler implements EventHandler {
     context.setCompleted();
   }
 
-  @On(service = ReviewsService_.CDS_NAME, event = "unlike")
-  public void onUnLikes(UnlikeContext context) {
+  @On(service = ReviewsService_.CDS_NAME)
+  public void onUnlike(UnlikeContext context) {
     String reviewer = context.getReview().getReviewer();
     String subject = context.getReview().getSubject();
     try {
