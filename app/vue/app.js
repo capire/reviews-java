@@ -1,7 +1,7 @@
 import { createApp, ref, reactive } from 'vue'
 import cds from './cap.js'
 
-const { GET, POST, PUT } = await cds.connect.to ('/odata/v4/sap.capire.reviews.app.ReviewsService/')
+const { GET, POST, PUT } = await cds.connect.to ('/odata/v4/ReviewsService/')
 createApp ({ setup() {
 
   const $ = sel => document.querySelector(sel)

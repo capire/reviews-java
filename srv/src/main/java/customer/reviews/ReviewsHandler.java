@@ -28,14 +28,14 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
 
 import cds.gen.sap.capire.reviews.Likes;
-import cds.gen.sap.capire.reviews.api.reviewsservice.AverageRatingsChanged;
-import cds.gen.sap.capire.reviews.api.reviewsservice.AverageRatingsChangedContext;
-import cds.gen.sap.capire.reviews.app.reviewsservice.ReviewsService_;
-import cds.gen.sap.capire.reviews.app.reviewsservice.LikeContext;
-import cds.gen.sap.capire.reviews.app.reviewsservice.Likes_;
-import cds.gen.sap.capire.reviews.app.reviewsservice.Reviews;
-import cds.gen.sap.capire.reviews.app.reviewsservice.Reviews_;
-import cds.gen.sap.capire.reviews.app.reviewsservice.UnlikeContext;
+import cds.gen.sap.capire.reviews.Likes_;
+import cds.gen.reviewsservice.AverageRatingsChanged;
+import cds.gen.reviewsservice.AverageRatingsChangedContext;
+import cds.gen.reviewsservice.ReviewsService_;
+import cds.gen.reviewsservice.LikeContext;
+import cds.gen.reviewsservice.Reviews;
+import cds.gen.reviewsservice.Reviews_;
+import cds.gen.reviewsservice.UnlikeContext;
 
 @Component
 @ServiceName(ReviewsService_.CDS_NAME)
@@ -44,10 +44,6 @@ public class ReviewsHandler implements EventHandler {
   @Autowired
   @Qualifier(ReviewsService_.CDS_NAME)
   CqnService service;
-
-  @Autowired
-  @Qualifier(cds.gen.sap.capire.reviews.api.reviewsservice.ReviewsService_.CDS_NAME)
-  CqnService serviceApi;
 
   private final PersistenceService persistenceService;
   private final Random random;
@@ -68,7 +64,7 @@ public class ReviewsHandler implements EventHandler {
     String reviewer = context.getReview().getReviewer();
     String subject = context.getReview().getSubject();
     try {
-      service.run(Insert.into(Likes_.CDS_NAME)
+      persistenceService.run(Insert.into(Likes_.CDS_NAME)
         .entry(Map.of(
           "user", context.getUserInfo().getName(), 
           "review_reviewer", reviewer,
@@ -109,7 +105,7 @@ public class ReviewsHandler implements EventHandler {
       paramValues.put("reviewer", reviewer);
       paramValues.put("subject", subject);
 
-      Result deleteResult = service.run(delete, paramValues);
+      Result deleteResult = persistenceService.run(delete, paramValues);
       if(deleteResult.rowCount()!=1)
         throw new ServiceException("Failed to delete the like");
 
@@ -150,7 +146,7 @@ public class ReviewsHandler implements EventHandler {
     event.setRating(avgRating);
     AverageRatingsChangedContext message = AverageRatingsChangedContext.create();
     message.setData(event);
-    serviceApi.emit(message);
+    service.emit(message);
   }
 
 }
