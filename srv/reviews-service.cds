@@ -1,34 +1,27 @@
 using { sap.capire.reviews as my } from '../db/schema';
-namespace sap.capire.reviews.app;
-
-type Review {
-  subject  : my.Reviews:subject;
-  reviewer : my.Reviews:reviewer;
-}
 
 @(requires: 'any')
 service ReviewsService {
 
-  entity ListOfReviews as projection on my.Reviews excluding { text, likes };
-  entity Reviews @cds.redirection.target as projection on my.Reviews;
+  /** The central entity for reviews, mostly used to add/change reviews */
+  entity Reviews as projection on my.Reviews;
 
-  // Actions for liking and unliking reviews
-  entity Likes as projection on my.Likes;
+  /** Lightweight list of reviews without text and likes */
+  @readonly entity ListOfReviews as projection on Reviews excluding { text, likes };
+
+  /** Summary of average ratings per reviewed subject. */
+  @readonly entity AverageRatings as projection on Reviews {
+    key subject,
+    round(avg(rating),2) as rating  : my.Rating,
+    count(*)             as reviews : Integer,
+  } group by subject;
+
+  /** Event emitted when a subject's average rating has changed. */
+  event AverageRatings.Changed : AverageRatings;
+
+  /** Entities and actions for liking and unliking reviews */
+  @readonly entity Likes as projection on my.Likes;
   action like (review: Review);
   action unlike (review: Review);
-
+  type Review : projection on my.Reviews { subject, reviewer }
 }
-
-
-// Access control restrictions
-annotate ReviewsService.Reviews with @restrict:[
-  { grant:'READ',   to:'any' },                 // everybody can read reviews
-  { grant:'CREATE', to:'authenticated-user' },  // users must login to add reviews
-  { grant:'UPDATE', to:'authenticated-user', where:'reviewer=$user' },
-  { grant:'DELETE', to:'admin' },
-];
-
-annotate ReviewsService with @restrict:[
-  { grant:'like', to:'identified-user' },
-  { grant:'unlike', to:'identified-user', where:'user=$user' },
-];
