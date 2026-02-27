@@ -1,5 +1,5 @@
 {
-  "name": "@capire/reviews-java",
+  "name": "@capire/reviews",
   "version": "2.0.1",
   "description": "A generic reuse service for managing reviews.",
   "repository": "https://github.com/capire/reviews-java",
