@@ -1,4 +1,4 @@
-# @capire/reviews-java
+# @capire/reviews
 
 This is a sample app which provides a generic reuse service for managing reviews,
 and a corresponding Vue UI. It is used in the [bookstore](../bookstore) sample.
