@@ -54,7 +54,6 @@
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-feature-enterprise-messaging</artifactId>
 			<scope>runtime</scope>
-			<version>4.5.0</version>
 		</dependency>
 
 	</dependencies>
